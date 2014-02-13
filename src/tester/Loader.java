@@ -18,5 +18,9 @@ public class Loader {
 	public Loader(String basename) throws IOException{
 		ig = BVGraph.loadMapped(basename);
 	}
+	
+	public BVGraph getGraph(){
+		return ig;
+	}
 
 }
