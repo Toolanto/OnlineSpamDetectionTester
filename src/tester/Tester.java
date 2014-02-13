@@ -1,12 +1,10 @@
 package tester;
 
-import it.unimi.dsi.webgraph.NodeIterator;
+
 
 import java.io.IOException;
-
-import javax.print.attribute.standard.PageRanges;
-
-import edu.uci.ics.jung.algorithms.scoring.PageRank;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Tester {
 
@@ -19,15 +17,32 @@ public class Tester {
 		
 		try {
 			Loader graph = new Loader("../dataset1/uk-2007-05");
-			NodeIterator node = graph.getGraph().nodeIterator();
-			System.out.println(graph.getGraph().numNodes());
-			System.out.println(graph.getGraph().numArcs());
 			LabelReader lr = new LabelReader("../dataset1/WEBSPAM-UK2007-SET1-labels.txt");
-			System.out.println(lr.reade().size());
-			while (node.hasNext()){
-				System.out.println(node.next().toString());
-			}
+            ArrayList<LabelNode> labelNode = lr.reade();
+            HashSet<Integer> seedTrustRank = new HashSet<Integer>();
+            HashSet<Integer> seedAntiTrustRank = new HashSet<Integer>();            
+            for (LabelNode n:labelNode){
+            	if (n.getLabel().equals("nonspam")){
+            		seedTrustRank.add(n.getId());
+            	}else if(n.getLabel().equals("spam")){
+            		seedAntiTrustRank.add(n.getId());
+            	}
+            }
+
+            /*
+             *  compute trustrank and antitrustrank
+             */
 			
+            System.out.println(Runtime.getRuntime().totalMemory());
+            TrustRank tr = new TrustRank(graph.getGraph());
+            tr.setGoodSeeds(seedTrustRank);
+            try {
+				tr.compute();
+				System.out.println(tr.getRank());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block	
 			e.printStackTrace();

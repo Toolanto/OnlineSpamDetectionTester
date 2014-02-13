@@ -15,8 +15,8 @@ public class LabelReader {
 	  this.file = file;	
 	}
 	
-	public HashMap<String,String> reade(){
-		HashMap<String, String> hs = new HashMap<String, String>();
+	public ArrayList<LabelNode> reade(){
+		ArrayList<LabelNode>  labelNodes= new ArrayList<LabelNode>();
 		File name = new File(file);
 		if (name.isFile()) {
 			try {
@@ -29,11 +29,11 @@ public class LabelReader {
 					 *  prendo i primi due campo
 					 */
 					String[] temp = text.split(" ");
-					System.out.println(temp[0]+" "+temp[1]);
-					hs.put(temp[0], temp[1]);
+					//System.out.println(temp[0]+" "+temp[1]);
+					labelNodes.add(new LabelNode(Integer.parseInt(temp[0]), temp[1]));
 				}
 				input.close();
-                return hs;
+                return labelNodes;
 			} catch (IOException ioException) {
 				ioException.printStackTrace();
 			}
