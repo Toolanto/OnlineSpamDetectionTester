@@ -70,7 +70,8 @@ public class TrustRank {
 		System.gc();
 	}
 
-	public void setGoodSeeds(String datasetLabel)
+	/**
+	public void setGoodSeedsInversePageRank(String datasetLabel)
 			throws IOException {
 		
 		System.out.println("Inizializzazioe seedset");
@@ -106,7 +107,7 @@ public class TrustRank {
 				arr[i] = 0;
 		pr.start = DoubleArrayList.wrap(arr);
 	}
-
+**/
 	/**
 	 * 
 	 * compute the TR scores
