@@ -6,6 +6,7 @@ import it.unimi.dsi.law.rank.PageRank.IterationNumberStoppingCriterion;
 import it.unimi.dsi.law.rank.PageRank.NormDeltaStoppingCriterion;
 import it.unimi.dsi.law.rank.PageRankPowerMethod;
 import it.unimi.dsi.law.vector.DenseVector;
+import it.unimi.dsi.webgraph.ASCIIGraph;
 import it.unimi.dsi.webgraph.ImmutableGraph;
 import it.unimi.dsi.webgraph.Transform;
 
@@ -42,12 +43,6 @@ public class TrustRank {
 		return pr.rank;
 	}
 
-	/**
-	 * 
-	 * set the biased good seeds
-	 * 
-	 * @param seeds
-	 */
 
 	public void setGoodSeeds(HashSet<Integer> seeds) {
 		int numNodes = g.numNodes();
@@ -59,6 +54,7 @@ public class TrustRank {
 			if (seeds.contains(new Integer(i))){
 				arr[i] = 1.0;
 				sum += 1.0;
+				System.out.println("sum: "+i);
 			}
 			else
 				arr[i] = 0.0;
@@ -66,54 +62,9 @@ public class TrustRank {
 			arr[i] = arr[i]/sum;
         
 		pr.start = DoubleArrayList.wrap(arr);
-		arr = null;
-		System.gc();
 	}
 
-	/**
-	public void setGoodSeedsInversePageRank(String datasetLabel)
-			throws IOException {
-		
-		System.out.println("Inizializzazioe seedset");
-		// 1) calcolo inverse page rank
 
-		PageRankPowerMethod seedSeet = new PageRankPowerMethod(
-				Transform.transpose(g));
-		seedSeet.start = null;
-		seedSeet.alpha = alpha;
-		seedSeet.stepUntil(PageRank.or(
-				new NormDeltaStoppingCriterion(threshold),
-				new IterationNumberStoppingCriterion(numberOfIteration)));
-
-		// 2) seleziono i seed buoni e normalizzo
-		// non faccio l'oridnamento del seedset perché chiamo la funzione oracle
-		// su tutto il seedset
-		// per capire meglio guardare l'algoritmo
-
-		LabelReader lr = new LabelReader(
-				"../dataset1/WEBSPAM-UK2007-SET1-labels.txt");
-		ArrayList<LabelNode> labelNode = lr.reade();
-		HashSet<Integer> seedTrustRank = new HashSet<Integer>();
-		for (LabelNode n : labelNode) {
-			if (n.getLabel().equals("nonspam")) {
-				seedTrustRank.add(n.getId());
-			}
-		}
-		double[] arr = new double[seedSeet.rank.length];
-		for (int i = 0; i < seedSeet.rank.length; i++)
-			if (seedTrustRank.contains(i))
-				arr[i] = 1 / seedTrustRank.size();
-			else
-				arr[i] = 0;
-		pr.start = DoubleArrayList.wrap(arr);
-	}
-**/
-	/**
-	 * 
-	 * compute the TR scores
-	 * 
-	 * @throws Exception
-	 */
 
 	public void compute() throws Exception {
 		pr.alpha = alpha;
