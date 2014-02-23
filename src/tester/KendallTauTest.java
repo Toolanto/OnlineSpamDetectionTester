@@ -1,13 +1,15 @@
 package tester;
 
-import java.util.HashSet;
-
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.law.stat.KendallTau;
 import it.unimi.dsi.webgraph.ImmutableGraph;
 import it.unimi.dsi.webgraph.ImmutableSubgraph;
 import it.unimi.dsi.webgraph.algo.ParallelBreadthFirstVisit;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.util.HashSet;
 
 /**
  * Questa classe ha il compito di calcolare la tau dikendall tra i valori di
@@ -19,6 +21,9 @@ import it.unimi.dsi.webgraph.algo.ParallelBreadthFirstVisit;
  */
 public class KendallTauTest implements Test {
 	public static final int idStart = 62; // nodo da cui si fa partire la BFS
+	public static final int increment = 100;
+	private static final String KENDALLTAU = "kendalTau.txt";
+	
 	private ImmutableGraph graph;
 	private HashSet<Integer> seedTrustRank;
 
@@ -42,7 +47,10 @@ public class KendallTauTest implements Test {
 				.println("Calcolo tau di trustrank per ogni dimensione della visita...");
 		double[] trustrank = Utility.readeTrustrank("trustrank.txt");
 		double[] tauKendall = new double[bfs.queue.size()];
-		for (int i = 0; i < bfs.queue.size(); i++) {
+		FileWriter kendallTau = new FileWriter(KENDALLTAU);
+		BufferedWriter bf = new BufferedWriter(kendallTau);
+		int i = 0;
+		while ( i < bfs.queue.size()) {
 			int[] t = new int[i + 1];
 			// copio in t gli elementi della coda di nodi visitati pari a i
 			bfs.queue.getElements(0, t, 0, i + 1);
@@ -66,9 +74,13 @@ public class KendallTauTest implements Test {
 				temp[subGraph.toSupergraphNode(j)] = trustSubGraph.getRank()[j];
 			}
 			tauKendall[i] = KendallTau.compute(trustrank, temp);
+			bf.write(i + " " + tauKendall[i] + "\n");
+			bf.flush();
+			System.err.println("Iterazione: "+i);
+			i+= increment;
 		}
-		for (double k : tauKendall)
-			System.out.println(k);
+
+			
 	}
 
 }

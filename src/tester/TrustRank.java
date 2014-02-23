@@ -48,13 +48,11 @@ public class TrustRank {
 		int numNodes = g.numNodes();
 		double[] arr = new double[numNodes];
 		int seedSize = seeds.size();
-		System.out.print(seedSize);
 		double sum = 0.0;
 		for (int i = 0; i < numNodes; i++)
 			if (seeds.contains(new Integer(i))){
 				arr[i] = 1.0;
 				sum += 1.0;
-				System.out.println("sum: "+i);
 			}
 			else
 				arr[i] = 0.0;
