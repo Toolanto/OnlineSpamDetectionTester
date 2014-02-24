@@ -20,7 +20,6 @@ import java.util.HashSet;
  * */
 public class Tester {
 
-	public static final String LABELPAHT = "../dataset1/WEBSPAM-UK2007-SET1-labels.txt";
 	public static final String TRUSTRANK_FILE = "trustrank.txt";
 	public static final String GRAPHPATH = "../dataset2/bvuk-2007-05";
 
@@ -30,7 +29,7 @@ public class Tester {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		HashSet<Integer> seedTrustRank = readeLabel();
+		HashSet<Integer> seedTrustRank = Utility.readeLabel("nonspam");
 
 		try {
 			System.out.println("Calcolo trustrank sul grafo completo....");
@@ -56,21 +55,17 @@ public class Tester {
 		}
 
 		try {
+		  // Ciclo for
           Test test = new KendallTauTest(ImmutableGraph.load(GRAPHPATH), seedTrustRank);
           test.run();
+  		  HashSet<Integer> seedBad = Utility.readeLabel("spam");
+          Test test1 = new KendallTauBadNodeTest(ImmutableGraph.load(GRAPHPATH), seedTrustRank,seedBad);
+          test1.run();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	private static HashSet<Integer> readeLabel() {
-		System.out.println("Lettura etichette....");
-		ArrayList<LabelNode> labelNode = Utility.readeLabel(LABELPAHT);
-		HashSet<Integer> seedTrustRank = new HashSet<Integer>();
-		for (LabelNode n : labelNode)
-			if (n.getLabel().equals("nonspam"))
-				seedTrustRank.add(n.getId());
-		return seedTrustRank;
-	}
+
 }

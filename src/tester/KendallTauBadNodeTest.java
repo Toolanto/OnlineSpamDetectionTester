@@ -11,25 +11,18 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.HashSet;
 
-/**
- * Questa classe ha il compito di calcolare la tau dikendall tra i valori di
- * trustrank di tutto il grafo con i valoori di trustrank ottenuti lungo una
- * visita in ampiezza
- * 
- * @author antonio
- * 
- */
-public class KendallTauTest implements Test {
+public class KendallTauBadNodeTest extends KendallTauTest implements Test {
 	public static final int idStart = 62; // nodo da cui si fa partire la BFS
-	public static final int increment = 100;
-	private static final String KENDALLTAU = "kendalTau.txt";
+	public static final int increment = 500;
+	private static final String KENDALLTAUBADNODES = "kendalTauBadNodes.txt";
 	
-	protected ImmutableGraph graph;
-	protected HashSet<Integer> seedGoodNodes;
-
-	public KendallTauTest(ImmutableGraph graph, HashSet<Integer> seedGoodNodes) {
-		this.graph = graph;
-		this.seedGoodNodes = seedGoodNodes;
+	private HashSet<Integer> seedBadNodes;
+	
+	public KendallTauBadNodeTest(ImmutableGraph graph,
+			HashSet<Integer> seedGoodNodes,HashSet<Integer> seedBadNodes) {
+		super(graph, seedGoodNodes);
+		this.seedBadNodes = seedBadNodes;
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -45,9 +38,19 @@ public class KendallTauTest implements Test {
 				+ bfs.queue.size());
 		System.out
 				.println("Calcolo tau di trustrank per ogni dimensione della visita...");
+		
 		double[] trustrank = Utility.readTrustrank("trustrank.txt");
-		double[] tauKendall = new double[bfs.queue.size()];
-		FileWriter kendallTau = new FileWriter(KENDALLTAU);
+		
+		//nel vettore di trustrank imposto a 0 tutti i valori che non sono etichettati come bad
+		//in questo modo faccio un confronto con la tao di kendall solo tra nodi cattivi
+		
+		//for (double tmp:trustrank)
+		//	if (!seedBadNodes.contains(tmp))
+		//		tmp = 0;
+		
+		double[] tauKendallBadNodes = new double[bfs.queue.size()];
+		
+		FileWriter kendallTau = new FileWriter(KENDALLTAUBADNODES);
 		BufferedWriter bf = new BufferedWriter(kendallTau);
 		int i = 0;
 		while ( i < bfs.queue.size()) {
@@ -71,16 +74,17 @@ public class KendallTauTest implements Test {
 			for (double f : temp)
 				f = 0.0;
 			for (int j = 0; j < trustSubGraph.getRank().length; j++) {
+				//prendo in consideranzion solo i nodi cattivi gli altri li lascio a 0
+				if(seedBadNodes.contains(subGraph.toSupergraphNode(j)))
 				temp[subGraph.toSupergraphNode(j)] = trustSubGraph.getRank()[j];
 			}
-			tauKendall[i] = KendallTau.compute(trustrank, temp);
-			bf.write(i + " " + tauKendall[i] + "\n");
+			tauKendallBadNodes[i] = KendallTau.compute(trustrank, temp);
+			bf.write(i + " " + tauKendallBadNodes[i] + "\n");
 			bf.flush();
 			System.err.println("Iterazione: "+i);
 			i+= increment;
 		}
 
-			
 	}
 
 }
