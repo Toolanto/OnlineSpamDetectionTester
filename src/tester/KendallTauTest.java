@@ -68,8 +68,9 @@ public class KendallTauTest implements Test {
 			trustSubGraph.setGoodSeeds(newSeed);
 			trustSubGraph.compute();
 			double[] temp = new double[trustrank.length];
-			for (double f : temp)
-				f = 0.0;
+			for (int f=0; f<temp.length;f++)
+				temp[f] = 0.0;
+			
 			for (int j = 0; j < trustSubGraph.getRank().length; j++) {
 				temp[subGraph.toSupergraphNode(j)] = trustSubGraph.getRank()[j];
 			}

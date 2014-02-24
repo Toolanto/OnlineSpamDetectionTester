@@ -56,8 +56,8 @@ public class Tester {
 
 		try {
 		  // Ciclo for
-          Test test = new KendallTauTest(ImmutableGraph.load(GRAPHPATH), seedTrustRank);
-          test.run();
+          //Test test = new KendallTauTest(ImmutableGraph.load(GRAPHPATH), seedTrustRank);
+          //test.run();
   		  HashSet<Integer> seedBad = Utility.readeLabel("spam");
           Test test1 = new KendallTauBadNodeTest(ImmutableGraph.load(GRAPHPATH), seedTrustRank,seedBad);
           test1.run();

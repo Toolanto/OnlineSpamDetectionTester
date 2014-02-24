@@ -15,6 +15,8 @@ public class KendallTauBadNodeTest extends KendallTauTest implements Test {
 	public static final int idStart = 62; // nodo da cui si fa partire la BFS
 	public static final int increment = 500;
 	private static final String KENDALLTAUBADNODES = "kendalTauBadNodes.txt";
+	private static final String KENDALLTAUBADNODESALL = "kendalTauBadNodesAll.txt";
+
 	
 	private HashSet<Integer> seedBadNodes;
 	
@@ -44,10 +46,10 @@ public class KendallTauBadNodeTest extends KendallTauTest implements Test {
 		//nel vettore di trustrank imposto a 0 tutti i valori che non sono etichettati come bad
 		//in questo modo faccio un confronto con la tao di kendall solo tra nodi cattivi
 		
-		//for (double tmp:trustrank)
-		//	if (!seedBadNodes.contains(tmp))
-		//		tmp = 0;
-		
+		for (int t=0;t<trustrank.length;t++)
+			if (!seedBadNodes.contains(t))
+				trustrank[t] = 0;
+
 		double[] tauKendallBadNodes = new double[bfs.queue.size()];
 		
 		FileWriter kendallTau = new FileWriter(KENDALLTAUBADNODES);
