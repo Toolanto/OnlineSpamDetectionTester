@@ -39,7 +39,8 @@ public class Utility {
 		return null;
 	}
 	
-	public static double[] readTrustrank(String name){
+	public static double[] readRank(String name){
+		
 		DoubleArrayList trustRank = new DoubleArrayList();
 		File nameFile = new File(name);
 		if (nameFile.isFile()) {

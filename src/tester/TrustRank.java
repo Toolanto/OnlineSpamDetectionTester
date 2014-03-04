@@ -14,14 +14,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class TrustRank {
+public class TrustRank{
 
 	private ImmutableGraph g;
 	private PageRankPowerMethod pr;
 	private double threshold = PageRank.DEFAULT_THRESHOLD;
 	private int numberOfIteration = PageRank.DEFAULT_MAX_ITER;
 	private double alpha = PageRank.DEFAULT_ALPHA;
-
+	
 	public TrustRank(ImmutableGraph g) {
 		this.g = g;
 		pr = new PageRankPowerMethod(g);
@@ -44,7 +44,7 @@ public class TrustRank {
 	}
 
 
-	public void setGoodSeeds(HashSet<Integer> seeds) {
+	public void setSeeds(HashSet<Integer> seeds) {
 		int numNodes = g.numNodes();
 		double[] arr = new double[numNodes];
 		int seedSize = seeds.size();
