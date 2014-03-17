@@ -13,13 +13,12 @@ import java.util.HashSet;
 
 public class AntiTrustRankGoodNodesTest extends AntiTrustRankTest implements Test {
 
-	private static final String KENDALLTAUGOODNODES = "AntiTrustRankGoodNodesTest.txt";
 	
 	private HashSet<Integer> seedGoodNodes;
 	
 	public AntiTrustRankGoodNodesTest(ImmutableGraph graph,
-			HashSet<Integer> seedBadNodes,HashSet<Integer> seedGoodNodes) {
-		super(graph, seedBadNodes);
+			HashSet<Integer> seedBadNodes,HashSet<Integer> seedGoodNodes,String namePath) {
+		super(graph, seedBadNodes,namePath);
 		this.seedGoodNodes = seedGoodNodes;
 		// TODO Auto-generated constructor stub
 	}
@@ -50,7 +49,7 @@ public class AntiTrustRankGoodNodesTest extends AntiTrustRankTest implements Tes
 
 		double[] tauKendallGoodNodes = new double[bfs.queue.size()];
 		
-		FileWriter kendallTau = new FileWriter(KENDALLTAUGOODNODES);
+		FileWriter kendallTau = new FileWriter(namePath);
 		BufferedWriter bf = new BufferedWriter(kendallTau);
 		int i = 0;
 		while ( i < bfs.queue.size()) {

@@ -14,13 +14,12 @@ import java.util.HashSet;
 public class TrustRankBadNodeTest extends TrustRankTest implements Test {
 	public static final int idStart = 62; // nodo da cui si fa partire la BFS
 	public static final int increment = 500;
-	private static final String KENDALLTAUBADNODES = "trustRankBadNodesTest.txt";
 	
 	private HashSet<Integer> seedBadNodes;
 	
 	public TrustRankBadNodeTest(ImmutableGraph graph,
-			HashSet<Integer> seedGoodNodes,HashSet<Integer> seedBadNodes) {
-		super(graph, seedGoodNodes);
+			HashSet<Integer> seedGoodNodes,HashSet<Integer> seedBadNodes, String namePath) {
+		super(graph, seedGoodNodes,namePath);
 		this.seedBadNodes = seedBadNodes;
 		// TODO Auto-generated constructor stub
 	}
@@ -51,7 +50,7 @@ public class TrustRankBadNodeTest extends TrustRankTest implements Test {
 
 		double[] tauKendallBadNodes = new double[bfs.queue.size()];
 		
-		FileWriter kendallTau = new FileWriter(KENDALLTAUBADNODES);
+		FileWriter kendallTau = new FileWriter(namePath);
 		BufferedWriter bf = new BufferedWriter(kendallTau);
 		int i = 0;
 		while ( i < bfs.queue.size()) {

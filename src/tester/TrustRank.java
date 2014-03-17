@@ -1,17 +1,13 @@
 package tester;
 
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.law.rank.PageRank;
 import it.unimi.dsi.law.rank.PageRank.IterationNumberStoppingCriterion;
 import it.unimi.dsi.law.rank.PageRank.NormDeltaStoppingCriterion;
 import it.unimi.dsi.law.rank.PageRankPowerMethod;
-import it.unimi.dsi.law.vector.DenseVector;
-import it.unimi.dsi.webgraph.ASCIIGraph;
 import it.unimi.dsi.webgraph.ImmutableGraph;
-import it.unimi.dsi.webgraph.Transform;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class TrustRank{
@@ -42,12 +38,17 @@ public class TrustRank{
 	public double[] getRank() {
 		return pr.rank;
 	}
+	
+	public DoubleList getStart(){
+		return pr.start;
+	}
 
 
 	public void setSeeds(HashSet<Integer> seeds) {
+		
+		if(seeds.size()>0){
 		int numNodes = g.numNodes();
 		double[] arr = new double[numNodes];
-		int seedSize = seeds.size();
 		double sum = 0.0;
 		for (int i = 0; i < numNodes; i++)
 			if (seeds.contains(new Integer(i))){
@@ -60,6 +61,9 @@ public class TrustRank{
 			arr[i] = arr[i]/sum;
         
 		pr.start = DoubleArrayList.wrap(arr);
+		}else{
+			pr.start = null;
+		}
 	}
 
 

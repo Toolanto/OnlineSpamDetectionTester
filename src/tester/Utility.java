@@ -11,7 +11,8 @@ import java.util.HashSet;
 
 public class Utility {
 	
-	public static final String LABELPAHT = "../dataset1/WEBSPAM-UK2007-SET1-labels.txt";
+	public static final String LABELPATH = "../dataset1/WEBSPAM-UK2007-SET1-labels.txt";
+	public static final String LABELPATH2 = "../dataset1/WEBSPAM-UK2007-SET2-labels.txt";
 	
 	public static ArrayList<LabelNode> readLabel(String file){
 		ArrayList<LabelNode>  labelNodes= new ArrayList<LabelNode>();
@@ -59,9 +60,9 @@ public class Utility {
         return trustRank.toDoubleArray();
 	}
 	
-	public static HashSet<Integer> readeLabel(String type) {
+	public static HashSet<Integer> readeLabel(String type,String path) {
 		System.out.println("Lettura etichette....");
-		ArrayList<LabelNode> labelNode = Utility.readLabel(LABELPAHT);
+		ArrayList<LabelNode> labelNode = Utility.readLabel(path);
 		HashSet<Integer> seed = new HashSet<Integer>();
 		for (LabelNode n : labelNode)
 			if (n.getLabel().equals(type))

@@ -26,8 +26,8 @@ public class Tester {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		HashSet<Integer> seedTrustRank = Utility.readeLabel("nonspam");
-		HashSet<Integer> seedAntiTrustRank = Utility.readeLabel("spam");
+		HashSet<Integer> seedTrustRank = Utility.readeLabel("nonspam",Utility.LABELPATH);
+		HashSet<Integer> seedAntiTrustRank = Utility.readeLabel("spam",Utility.LABELPATH);
 
 		try {
 			File trustRankFile = new File(TRUSTRANK_FILE);
@@ -69,22 +69,24 @@ public class Tester {
 			e.printStackTrace();
 		}
 
-		try {
-			// Ciclo for
-			// Test test = new KendallTauTest(ImmutableGraph.load(GRAPHPATH),
-			// seedTrustRank);
-			// test.run();
-			// HashSet<Integer> seedBad = Utility.readeLabel("spam");
-			// Test test1 = new
-			// TrustRankBadNodeTest(ImmutableGraph.load(GRAPHPATH),
-			// seedTrustRank,seedBad);
-			// test1.run();
-			// Test test = new AntiTrustRankTest(ImmutableGraph.load(GRAPHPATH),
-			// seedAntiTrustRank);
-			// test.run();
-			Test test3 = new AntiTrustRankGoodNodesTest(
-					ImmutableGraph.load(GRAPHPATH), seedAntiTrustRank, seedTrustRank);
-			test3.run();
+		try {/**
+			ArrayList<Test> testRun = new ArrayList<Test>();
+			testRun.add(new TrustRankTest(ImmutableGraph.load(GRAPHPATH),
+					seedTrustRank,"trustranktest.txt"));
+			HashSet<Integer> seedBad = Utility.readeLabel("spam");
+			testRun.add(new TrustRankBadNodeTest(
+					ImmutableGraph.load(GRAPHPATH), seedTrustRank, seedBad,"trustrankBadNodesTest.txt"));
+			testRun.add(new AntiTrustRankTest(ImmutableGraph.load(GRAPHPATH),
+					seedAntiTrustRank,"antiTrustrankTest.txt");
+			testRun.add(new AntiTrustRankGoodNodesTest(ImmutableGraph
+					.load(GRAPHPATH), seedAntiTrustRank, seedTrustRank,"antiTrustraktGoodNodesTest.txt"));
+			testRun.add(new StressTest(ImmutableGraph.load(GRAPHPATH),200,"stressTrustTest.txt","stressAntiTrustTest.txt"));
+			for (int i = 0; i < testRun.size(); i++)
+				testRun.get(i).run(); 
+				**/
+			Test t = new StressTesterTwo(ImmutableGraph.load(GRAPHPATH),"stressTrustTwoTest.txt","stressAntiTrustTwoTest.txt");
+			t.run();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

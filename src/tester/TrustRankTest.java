@@ -22,14 +22,15 @@ import java.util.HashSet;
 public class TrustRankTest implements Test {
 	public static final int idStart = 62; // nodo da cui si fa partire la BFS
 	public static final int increment = 100;
-	private static final String KENDALLTAU = "trustRankTest.txt";
+	protected String namePath;
 	
 	protected ImmutableGraph graph;
 	protected HashSet<Integer> seedGoodNodes;
 
-	public TrustRankTest(ImmutableGraph graph, HashSet<Integer> seedGoodNodes) {
+	public TrustRankTest(ImmutableGraph graph, HashSet<Integer> seedGoodNodes, String namePath) {
 		this.graph = graph;
 		this.seedGoodNodes = seedGoodNodes;
+		this.namePath = namePath;
 	}
 
 	@Override
@@ -47,7 +48,7 @@ public class TrustRankTest implements Test {
 				.println("Calcolo tau di trustrank per ogni dimensione della visita...");
 		double[] trustrank = Utility.readRank("trustrank.txt");
 		double[] tauKendall = new double[bfs.queue.size()];
-		FileWriter kendallTau = new FileWriter(KENDALLTAU);
+		FileWriter kendallTau = new FileWriter(namePath);
 		BufferedWriter bf = new BufferedWriter(kendallTau);
 		int i = 0;
 		while ( i < bfs.queue.size()) {

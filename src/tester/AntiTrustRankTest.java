@@ -15,14 +15,15 @@ public class AntiTrustRankTest implements Test{
 
 	public static final int idStart = 112; // nodo da cui si fa partire la BFS
 	public static final int increment = 1000;
-	private static final String ANTITRUSTRANKTEST = "antiTrustRankTest.txt";
 	
 	protected ImmutableGraph graph;
 	protected HashSet<Integer> seedBadNodes;
+	protected String namePath;
 	
-	public AntiTrustRankTest(ImmutableGraph graph, HashSet<Integer> seedBadNodes){
+	public AntiTrustRankTest(ImmutableGraph graph, HashSet<Integer> seedBadNodes, String namePath){
 		this.graph = graph;
 		this.seedBadNodes = seedBadNodes;
+		this.namePath = namePath;
 	}
 	
 	@Override
@@ -40,7 +41,7 @@ public class AntiTrustRankTest implements Test{
 				.println("Calcolo tau di AntiTrustrank per ogni dimensione della visita...");
 		double[] antiTrustrank = Utility.readRank("antiTrustrank.txt");
 		double[] tauKendall = new double[bfs.queue.size()];
-		FileWriter kendallTau = new FileWriter(ANTITRUSTRANKTEST);
+		FileWriter kendallTau = new FileWriter(namePath);
 		BufferedWriter bf = new BufferedWriter(kendallTau);
 		int i = 0;
 		while ( i < bfs.queue.size()) {
