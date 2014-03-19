@@ -13,17 +13,18 @@ import it.unimi.dsi.webgraph.algo.ParallelBreadthFirstVisit;
 
 public class AntiTrustRankTest implements Test{
 
-	public static final int idStart = 112; // nodo da cui si fa partire la BFS
-	public static final int increment = 1000;
+	public int idStart; // nodo da cui si fa partire la BFS
+	public static final int increment = 500;
 	
 	protected ImmutableGraph graph;
 	protected HashSet<Integer> seedBadNodes;
 	protected String namePath;
 	
-	public AntiTrustRankTest(ImmutableGraph graph, HashSet<Integer> seedBadNodes, String namePath){
+	public AntiTrustRankTest(ImmutableGraph graph,int idStart, HashSet<Integer> seedBadNodes, String namePath){
 		this.graph = graph;
 		this.seedBadNodes = seedBadNodes;
 		this.namePath = namePath;
+		this.idStart=idStart;
 	}
 	
 	@Override

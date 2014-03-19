@@ -60,9 +60,9 @@ public class TrustRank{
 		for (int i = 0;i<arr.length;i++)
 			arr[i] = arr[i]/sum;
         
-		pr.start = DoubleArrayList.wrap(arr);
+		pr.preference = DoubleArrayList.wrap(arr);
 		}else{
-			pr.start = null;
+			pr.preference = null;
 		}
 	}
 

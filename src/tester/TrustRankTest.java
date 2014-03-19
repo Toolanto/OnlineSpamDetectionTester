@@ -12,7 +12,7 @@ import java.io.FileWriter;
 import java.util.HashSet;
 
 /**
- * Questa classe ha il compito di calcolare la tau dikendall tra i valori di
+ * Questa classe ha il compito di calcolare la tau di kendall tra i valori di
  * trustrank di tutto il grafo con i valoori di trustrank ottenuti lungo una
  * visita in ampiezza
  * 
@@ -20,17 +20,18 @@ import java.util.HashSet;
  * 	
  */
 public class TrustRankTest implements Test {
-	public static final int idStart = 62; // nodo da cui si fa partire la BFS
-	public static final int increment = 100;
+	public int idStart;
+	public static final int increment = 500;
 	protected String namePath;
 	
 	protected ImmutableGraph graph;
 	protected HashSet<Integer> seedGoodNodes;
 
-	public TrustRankTest(ImmutableGraph graph, HashSet<Integer> seedGoodNodes, String namePath) {
+	public TrustRankTest(ImmutableGraph graph,int idStart, HashSet<Integer> seedGoodNodes, String namePath) {
 		this.graph = graph;
 		this.seedGoodNodes = seedGoodNodes;
 		this.namePath = namePath;
+		this.idStart = idStart;
 	}
 
 	@Override
@@ -48,7 +49,7 @@ public class TrustRankTest implements Test {
 				.println("Calcolo tau di trustrank per ogni dimensione della visita...");
 		double[] trustrank = Utility.readRank("trustrank.txt");
 		double[] tauKendall = new double[bfs.queue.size()];
-		FileWriter kendallTau = new FileWriter(namePath);
+		FileWriter kendallTau = new FileWriter(namePath+""+idStart+".txt");
 		BufferedWriter bf = new BufferedWriter(kendallTau);
 		int i = 0;
 		while ( i < bfs.queue.size()) {

@@ -38,21 +38,21 @@ public class Tester {
 				TrustRank t = new TrustRank(graph);
 				t.setSeeds(seedTrustRank);
 				t.compute();
-				System.out.println("Srittura trustrank su file....");
+				System.out.println("Scrittura trustrank su file....");
 				FileWriter rankTrustRank = new FileWriter(TRUSTRANK_FILE);
 				BufferedWriter bf = new BufferedWriter(rankTrustRank);
 				for (int i = 0; i < t.getRank().length; i++) {
 					bf.write(i + " " + t.getRank()[i] + "\n");
 				}
 				bf.flush();
-			} else if (!antiTrustRankFile.exists()) {
+			} if (!antiTrustRankFile.exists()) {
 				System.out
 						.println("Calcolo AntiTrustrank sul grafo completo....");
 				ImmutableGraph graph = ImmutableGraph.load(GRAPHPATH);
 				AntiTrustRank t = new AntiTrustRank(graph);
 				t.setSeeds(seedAntiTrustRank);
 				t.compute();
-				System.out.println("Srittura AntiTrustrank su file....");
+				System.out.println("Scrittura AntiTrustrank su file....");
 				FileWriter rankAntiTrustRank = new FileWriter(
 						ANTITRUSTRANK_FILE);
 				BufferedWriter bf = new BufferedWriter(rankAntiTrustRank);
@@ -69,24 +69,28 @@ public class Tester {
 			e.printStackTrace();
 		}
 
-		try {/**
+		try {/*
 			ArrayList<Test> testRun = new ArrayList<Test>();
-			testRun.add(new TrustRankTest(ImmutableGraph.load(GRAPHPATH),
-					seedTrustRank,"trustranktest.txt"));
-			HashSet<Integer> seedBad = Utility.readeLabel("spam");
+			testRun.add(new TrustRankTest(ImmutableGraph.load(GRAPHPATH),62,
+					seedTrustRank,"trustranktest"));
+			HashSet<Integer> seedBad = Utility.readeLabel("spam",Utility.LABELPATH);
 			testRun.add(new TrustRankBadNodeTest(
-					ImmutableGraph.load(GRAPHPATH), seedTrustRank, seedBad,"trustrankBadNodesTest.txt"));
-			testRun.add(new AntiTrustRankTest(ImmutableGraph.load(GRAPHPATH),
-					seedAntiTrustRank,"antiTrustrankTest.txt");
+					ImmutableGraph.load(GRAPHPATH),62, seedTrustRank, seedBad,"trustrankBadNodesTest"));
+			testRun.add(new AntiTrustRankTest(ImmutableGraph.load(GRAPHPATH),112,
+					seedAntiTrustRank,"antiTrustrankTest"));
 			testRun.add(new AntiTrustRankGoodNodesTest(ImmutableGraph
-					.load(GRAPHPATH), seedAntiTrustRank, seedTrustRank,"antiTrustraktGoodNodesTest.txt"));
-			testRun.add(new StressTest(ImmutableGraph.load(GRAPHPATH),200,"stressTrustTest.txt","stressAntiTrustTest.txt"));
+					.load(GRAPHPATH), 112, seedAntiTrustRank, seedTrustRank,"antiTrustraktGoodNodesTest"));
+			testRun.add(new StressTest(ImmutableGraph.load(GRAPHPATH),200,"stressTrustTest","stressAntiTrustTest"));
 			for (int i = 0; i < testRun.size(); i++)
 				testRun.get(i).run(); 
-				**/
-			Test t = new StressTesterTwo(ImmutableGraph.load(GRAPHPATH),"stressTrustTwoTest.txt","stressAntiTrustTwoTest.txt");
+				
+			//Test t = new StressTesterTwo(ImmutableGraph.load(GRAPHPATH),"stressTrustTwoTest.txt","stressAntiTrustTwoTest.txt");
+			//t.run();
+			 */
+			HashSet<Integer> seedBad = Utility.readeLabel("spam",Utility.LABELPATH);
+			TrustRankBadNodeTest t = new TrustRankBadNodeTest(
+					ImmutableGraph.load(GRAPHPATH),62, seedTrustRank, seedBad,"trustrankBadNodesTest");
 			t.run();
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

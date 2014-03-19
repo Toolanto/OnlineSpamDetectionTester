@@ -16,9 +16,9 @@ public class AntiTrustRankGoodNodesTest extends AntiTrustRankTest implements Tes
 	
 	private HashSet<Integer> seedGoodNodes;
 	
-	public AntiTrustRankGoodNodesTest(ImmutableGraph graph,
+	public AntiTrustRankGoodNodesTest(ImmutableGraph graph,int idStart,
 			HashSet<Integer> seedBadNodes,HashSet<Integer> seedGoodNodes,String namePath) {
-		super(graph, seedBadNodes,namePath);
+		super(graph, idStart, seedBadNodes,namePath);
 		this.seedGoodNodes = seedGoodNodes;
 		// TODO Auto-generated constructor stub
 	}
@@ -49,7 +49,7 @@ public class AntiTrustRankGoodNodesTest extends AntiTrustRankTest implements Tes
 
 		double[] tauKendallGoodNodes = new double[bfs.queue.size()];
 		
-		FileWriter kendallTau = new FileWriter(namePath);
+		FileWriter kendallTau = new FileWriter(namePath+""+idStart+".txt");
 		BufferedWriter bf = new BufferedWriter(kendallTau);
 		int i = 0;
 		while ( i < bfs.queue.size()) {
