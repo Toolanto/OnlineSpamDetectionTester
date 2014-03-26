@@ -1,6 +1,7 @@
 package tester;
 
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,6 +14,7 @@ public class Utility {
 	
 	public static final String LABELPATH = "../dataset1/WEBSPAM-UK2007-SET1-labels.txt";
 	public static final String LABELPATH2 = "../dataset1/WEBSPAM-UK2007-SET2-labels.txt";
+	public static final String VISIT = "visit.txt";
 	
 	public static ArrayList<LabelNode> readLabel(String file){
 		ArrayList<LabelNode>  labelNodes= new ArrayList<LabelNode>();
@@ -68,6 +70,25 @@ public class Utility {
 			if (n.getLabel().equals(type))
 				seed.add(n.getId());
 		return seed;
+	}
+	
+	public static IntArrayList readVisit(){
+		IntArrayList v = new IntArrayList();
+		File name = new File(VISIT);
+		if (name.isFile()) {
+			try {
+				BufferedReader input = new BufferedReader(new FileReader(name));
+				String text;
+				while ((text = input.readLine()) != null){
+					v.add(Integer.parseInt(text));
+				}
+				input.close();
+                return v;
+			} catch (IOException ioException) {
+				ioException.printStackTrace();
+			}
+		}
+		return null;
 	}
 
 }

@@ -1,5 +1,7 @@
 package tester;
 
+import it.unimi.dsi.fastutil.ints.Int2BooleanArrayMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.law.stat.KendallTau;
@@ -16,10 +18,10 @@ public class AntiTrustRankGoodNodesTest extends AntiTrustRankTest implements
 
 	private HashSet<Integer> seedGoodNodes;
 
-	public AntiTrustRankGoodNodesTest(ImmutableGraph graph, int idStart,
+	public AntiTrustRankGoodNodesTest(ImmutableGraph graph, IntArrayList bfs,
 			HashSet<Integer> seedBadNodes, HashSet<Integer> seedGoodNodes,
 			String namePath, int mode) {
-		super(graph, idStart, seedBadNodes, namePath, mode);
+		super(graph, bfs, seedBadNodes, namePath, mode);
 		this.seedGoodNodes = seedGoodNodes;
 		// TODO Auto-generated constructor stub
 	}
@@ -30,11 +32,8 @@ public class AntiTrustRankGoodNodesTest extends AntiTrustRankTest implements
 		System.out.println("Calcolo di AntitrustRankGoodNodes");
 		System.out.println("Esecuzione della visita dei nodi...");
 		ImmutableGraph graphBFS = graph;
-		ParallelBreadthFirstVisit bfs = new ParallelBreadthFirstVisit(graphBFS,
-				0, false, null);
-		bfs.visit(idStart);
-		System.out.println("Nodi visitati partendo dal nodo " + idStart + ":"
-				+ bfs.queue.size());
+
+		System.out.println("Nodi visitati: "+ bfs.size());
 		System.out
 				.println("Calcolo tau di trustrank per ogni dimensione della visita...");
 
@@ -50,15 +49,15 @@ public class AntiTrustRankGoodNodesTest extends AntiTrustRankTest implements
 			if (!seedGoodNodes.contains(t))
 				antiTrustRank[t] = 0;
 
-		double[] tauKendallGoodNodes = new double[bfs.queue.size()];
+		double[] tauKendallGoodNodes = new double[bfs.size()];
 
-		FileWriter kendallTau = new FileWriter(namePath + "" + idStart + ".txt");
+		FileWriter kendallTau = new FileWriter(namePath);
 		BufferedWriter bf = new BufferedWriter(kendallTau);
 		int i = 0;
-		while (i < bfs.queue.size()) {
+		while (i < bfs.size()) {
 			int[] t = new int[i + 1];
 			// copio in t gli elementi della coda di nodi visitati pari a i
-			bfs.queue.getElements(0, t, 0, i + 1);
+			bfs.getElements(0, t, 0, i + 1);
 			System.out.println("Numero nodi array " + i + ": " + t.length);
 			IntSet ts = new IntArraySet(t);
 			ImmutableSubgraph subGraph = new ImmutableSubgraph(graphBFS, ts);
@@ -90,10 +89,12 @@ public class AntiTrustRankGoodNodesTest extends AntiTrustRankTest implements
 				if (seedGoodNodes.contains(subGraph.toSupergraphNode(j))) {
 					temp[subGraph.toSupergraphNode(j)] = antiTrustSubGraph
 							.getRank()[j];
+					numeroNodiGood++;
 					if (mode >= 1) {
 						idNode[j] = subGraph.toSupergraphNode(j);
-						numeroNodiGood++;
+						
 					}
+					
 				}
 			}
 			if (mode == 0)

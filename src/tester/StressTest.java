@@ -1,5 +1,6 @@
 package tester;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.law.stat.KendallTau;
@@ -26,11 +27,11 @@ public class StressTest implements Test {
 
 	protected ImmutableGraph graph;
 	protected int numberOfnodes;
-	protected int idStart;
-	protected int increment = 500;
+	int increment = 500;
 	protected String namePahtTrust;
 	protected String namePahtAntiTrust;
 	protected int mode;
+	protected IntArrayList bfs;
 
 	/**
 	 * 
@@ -39,25 +40,22 @@ public class StressTest implements Test {
 	 * @param numberOfnode
 	 *            numero di nodi finali da considerare come seedset
 	 */
-	public StressTest(ImmutableGraph graph, int idStart, int numberOfnodes,
+	public StressTest(ImmutableGraph graph, IntArrayList bfs, int numberOfnodes,
 			String namePathTrust, String namePathAntiTrust, int mode) {
 		this.graph = graph;
 		this.numberOfnodes = numberOfnodes;
 		this.namePahtTrust = namePathTrust;
 		this.namePahtAntiTrust = namePathAntiTrust;
-		this.idStart = idStart;
 		this.mode = mode;
+		this.bfs = bfs;
 	}
 
 	@Override
 	public void run() throws Exception {
 		// TODO Auto-generated method stub
 		System.out.println("Esecuzione della visita dei nodi...");
-		ParallelBreadthFirstVisit bfs = new ParallelBreadthFirstVisit(graph, 0,
-				false, null);
-		bfs.visit(idStart);
-		System.out.println("Nodi visitati partendo dal nodo " + idStart + ":"
-				+ bfs.queue.size());
+
+		System.out.println("Nodi visitati: "+ bfs.size());
 
 		double[] trustrank = new double[graph.numNodes()];
 		double[] antitrustrank = new double[graph.numNodes()];
@@ -65,22 +63,22 @@ public class StressTest implements Test {
 		// imposto i seedset con gli ultimi n-nodi
 		HashSet<Integer> seedSet = new HashSet<Integer>();
 
-		int numberIt = bfs.queue.size() - numberOfnodes;
+		int numberIt = bfs.size() - numberOfnodes;
 
-		for (int i = bfs.queue.size() - 1; i > numberIt; i--) {
-			seedSet.add(bfs.queue.get(i));
+		for (int i = bfs.size() - 1; i > numberIt; i--) {
+			seedSet.add(bfs.get(i));
 		}
 
 		// calcolo trustrank non sul grafo completo ma sul grafo della visita
 		// faccio la stessa cosa per antitrust
 
 		ImmutableSubgraph subGraphComplete = new ImmutableSubgraph(graph,
-				new IntArraySet(bfs.queue));
+				new IntArraySet(bfs));
 
 		TrustRank BFStrust = new TrustRank(subGraphComplete);
 		AntiTrustRank BFSantitrust = new AntiTrustRank(subGraphComplete);
 		HashSet<Integer> traslateSeedSetSub = new HashSet<Integer>();
-		for (int n : bfs.queue) {
+		for (int n : bfs) {
 			if (seedSet.contains(n))
 				traslateSeedSetSub.add(subGraphComplete.fromSupergraphNode(n));
 		}
@@ -107,18 +105,17 @@ public class StressTest implements Test {
 		
 		
 
-		FileWriter trustFile = new FileWriter(namePahtTrust + idStart + ".txt");
+		FileWriter trustFile = new FileWriter(namePahtTrust);
 		BufferedWriter tf = new BufferedWriter(trustFile);
-		FileWriter antitrustFile = new FileWriter(namePahtAntiTrust + idStart
-				+ ".txt");
+		FileWriter antitrustFile = new FileWriter(namePahtAntiTrust);
 		BufferedWriter atf = new BufferedWriter(antitrustFile);
 
 		int iteration = 0;
-		while (iteration < bfs.queue.size()) {
+		while (iteration < bfs.size()) {
 			int[] t = new int[iteration + 1];
 			// copio in t gli elementi della coda di nodi visitati pari a
 			// iteration
-			bfs.queue.getElements(0, t, 0, t.length);
+			bfs.getElements(0, t, 0, t.length);
 
 			IntSet ts = new IntArraySet(t);
 			ImmutableSubgraph subGraph = new ImmutableSubgraph(graph, ts);
@@ -187,10 +184,10 @@ public class StressTest implements Test {
 				antitrustKendall[iteration] = KendallTau.compute(portionOfantitrustrank, portionOfantitrustrankSub);
 			}
 			
-			tf.write(iteration + " " + trustKendall[iteration] + "\n");
+			tf.write(iteration+1 + " " + trustKendall[iteration] + "\n");
 			tf.flush();
 
-			atf.write(iteration + " " + antitrustKendall[iteration] + "\n");
+			atf.write(iteration+1 + " " + antitrustKendall[iteration] + "\n");
 			atf.flush();
 
 			System.err.println("Iterazione: " + iteration);

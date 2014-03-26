@@ -1,5 +1,6 @@
 package tester;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.law.stat.KendallTau;
@@ -12,14 +13,13 @@ import java.io.FileWriter;
 import java.util.HashSet;
 
 public class TrustRankBadNodeTest extends TrustRankTest implements Test {
-	public static final int increment = 500;
 
 	private HashSet<Integer> seedBadNodes;
 
-	public TrustRankBadNodeTest(ImmutableGraph graph, int idStart,
+	public TrustRankBadNodeTest(ImmutableGraph graph, IntArrayList bfs,
 			HashSet<Integer> seedGoodNodes, HashSet<Integer> seedBadNodes,
 			String namePath, int mode) {
-		super(graph, idStart, seedGoodNodes, namePath, mode);
+		super(graph, bfs, seedGoodNodes, namePath, mode);
 		this.seedBadNodes = seedBadNodes;
 		// TODO Auto-generated constructor stub
 	}
@@ -30,11 +30,8 @@ public class TrustRankBadNodeTest extends TrustRankTest implements Test {
 
 		System.out.println("Esecuzione della visita dei nodi...");
 		ImmutableGraph graphBFS = graph;
-		ParallelBreadthFirstVisit bfs = new ParallelBreadthFirstVisit(graphBFS,
-				0, false, null);
-		bfs.visit(idStart);
-		System.out.println("Nodi visitati partendo dal nodo " + idStart + ":"
-				+ bfs.queue.size());
+	
+		System.out.println("Nodi visitati: "+ bfs.size());
 		System.out
 				.println("Calcolo tau di trustrank per ogni dimensione della visita...");
 
@@ -49,15 +46,15 @@ public class TrustRankBadNodeTest extends TrustRankTest implements Test {
 			if (!seedBadNodes.contains(t))
 				trustrank[t] = 0;
 
-		double[] tauKendallBadNodes = new double[bfs.queue.size()];
+		double[] tauKendallBadNodes = new double[bfs.size()];
 
-		FileWriter kendallTau = new FileWriter(namePath + "" + idStart + ".txt");
+		FileWriter kendallTau = new FileWriter(namePath);
 		BufferedWriter bf = new BufferedWriter(kendallTau);
 		int iteration = 0;
-		while (iteration < bfs.queue.size()) {
+		while (iteration < bfs.size()) {
 			int[] t = new int[iteration + 1];
 			// copio in t gli elementi della coda di nodi visitati pari a i
-			bfs.queue.getElements(0, t, 0, iteration + 1);
+			bfs.getElements(0, t, 0, iteration + 1);
 			System.out.println("Numero nodi array " + iteration + ": "
 					+ t.length);
 			IntSet ts = new IntArraySet(t);
@@ -86,24 +83,28 @@ public class TrustRankBadNodeTest extends TrustRankTest implements Test {
 				if (seedBadNodes.contains(subGraph.toSupergraphNode(j))) {
 					temp[subGraph.toSupergraphNode(j)] = trustSubGraph
 							.getRank()[j];
+					numeroNodiBad++;
 					if (mode >= 1)
 						idNode[j] = subGraph.toSupergraphNode(j);
-					    numeroNodiBad++;
+
 				}
+
 			}
 			if (mode == 0)
 				tauKendallBadNodes[iteration] = KendallTau.compute(trustrank,
 						temp);
-			else if(mode>=1){
-				double[] portionOftrustrank = new double[trustSubGraph.getRank().length];
-				double[] portionOftrustrankSub = new double[trustSubGraph.getRank().length];
-				for(int v=0;v<trustSubGraph.getRank().length;v++){
+			else if (mode >= 1) {
+				double[] portionOftrustrank = new double[trustSubGraph
+						.getRank().length];
+				double[] portionOftrustrankSub = new double[trustSubGraph
+						.getRank().length];
+				for (int v = 0; v < trustSubGraph.getRank().length; v++) {
 					portionOftrustrank[v] = trustrank[idNode[v]];
-				    portionOftrustrankSub[v] = temp[idNode[v]];
-				    
-				    //System.out.println("id: "+v+" trustrank: "+portionOftrustrank[v]+" trustranksub: "+portionOftrustrankSub[v]+" lunghezza: "+idNode.length+ " kendall: "+KendallTau.compute(portionOftrustrank, portionOftrustrankSub));
+					portionOftrustrankSub[v] = temp[idNode[v]];
+
 				}
-				tauKendallBadNodes[iteration] = KendallTau.compute(portionOftrustrank, portionOftrustrankSub);
+				tauKendallBadNodes[iteration] = KendallTau.compute(
+						portionOftrustrank, portionOftrustrankSub);
 			}
 
 			bf.write(numeroNodiBad + " " + tauKendallBadNodes[iteration] + "\n");

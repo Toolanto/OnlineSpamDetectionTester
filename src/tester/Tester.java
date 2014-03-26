@@ -1,6 +1,10 @@
 package tester;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.webgraph.ImmutableGraph;
+import it.unimi.dsi.webgraph.ImmutableSubgraph;
+import it.unimi.dsi.webgraph.algo.ParallelBreadthFirstVisit;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,6 +24,7 @@ public class Tester {
 	public static final String TRUSTRANK_FILE = "trustrank.txt";
 	public static final String ANTITRUSTRANK_FILE = "antiTrustrank.txt";
 	public static final String GRAPHPATH = "../dataset2/bvuk-2007-05";
+	public static final String VISIT = "visit.txt";
 
 	/**
 	 * @param args
@@ -70,25 +75,85 @@ public class Tester {
 		}
 
 		try {
+			ImmutableGraph g = ImmutableGraph.load(GRAPHPATH);
+			IntArrayList nodes;
+			
+			File visitFile = new File(VISIT);
+			if(!visitFile.exists()){
+				ParallelBreadthFirstVisit bfs = new ParallelBreadthFirstVisit(g, 0,false, null);
+				bfs.visit(62);
+				nodes = bfs.queue;
+				FileWriter visitWriter = new FileWriter(
+						VISIT);
+				BufferedWriter bf = new BufferedWriter(visitWriter);
+				for (int i = 0; i < bfs.queue.size(); i++) {
+					bf.write(bfs.queue.getInt(i)+"\n");
+				}
+				bf.flush();
+			}else{
+			
+			  nodes = Utility.readVisit();
+			}
+	
+			
 			ArrayList<Test> testRun = new ArrayList<Test>();
-			testRun.add(new TrustRankTest(ImmutableGraph.load(GRAPHPATH),112,
-					seedTrustRank,"trustranktestMode1_",1));
+			testRun.add(new TrustRankTest(g,nodes,
+				seedTrustRank,"trustranktestMode1_62.txt",1));
 			HashSet<Integer> seedBad = Utility.readeLabel("spam",Utility.LABELPATH);
 			testRun.add(new TrustRankBadNodeTest(
-					ImmutableGraph.load(GRAPHPATH),112, seedTrustRank, seedBad,"trustrankBadNodesTestMode1_",1));
-			testRun.add(new AntiTrustRankTest(ImmutableGraph.load(GRAPHPATH),112,
-					seedAntiTrustRank,"antiTrustrankTestMode1_",1));
-			testRun.add(new AntiTrustRankGoodNodesTest(ImmutableGraph
-					.load(GRAPHPATH), 112, seedAntiTrustRank, seedTrustRank,"antiTrustraktGoodNodesTestMode1_",1));
-			testRun.add(new StressTest(ImmutableGraph.load(GRAPHPATH),62,200,"stressTrustTestMode1_","stressAntiTrustTestMode1_",1));
+					g,nodes, seedTrustRank, seedBad,"trustrankBadNodesTestMode1_62.txt",1));
+			testRun.add(new AntiTrustRankTest(g,nodes,
+					seedAntiTrustRank,"antiTrustrankTestMode1_62.txt",1));
+			testRun.add(new AntiTrustRankGoodNodesTest(g, nodes, seedAntiTrustRank, seedTrustRank,"antiTrustraktGoodNodesTestMode1_62.txt",1));
+			testRun.add(new StressTest(g,nodes,700,"stressTrustTestMode1_62.txt","stressAntiTrustTestMode1_62.txt",1));
+			
+
 			for (int i = 0; i < testRun.size(); i++)
 				testRun.get(i).run(); 
-			
+		
 			 
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		/*
+		try {
+			ImmutableGraph g = ImmutableGraph.load(GRAPHPATH);
+			ImmutableGraph g1 = ImmutableGraph.load(GRAPHPATH);
+
+			ParallelBreadthFirstVisit bfs = new ParallelBreadthFirstVisit(g,
+					0, false, null);
+			bfs.visit(62);
+			IntArrayList t = bfs.queue;
+			bfs.visit(62);
+			IntArrayList t1 = bfs.queue;
+			for(int i=0;i<t.size();i++){
+				if(t.get(i)!=t1.get(i))
+					System.out.println("........"+t.get(i)+" "+t1.get(i));
+			}
+			
+			ParallelBreadthFirstVisit bfs1 = new ParallelBreadthFirstVisit(g1,
+					0, false, null);
+			bfs1.visit(62);
+			System.out.println(bfs.queue.size()+" "+bfs1.queue.size());
+			for(int i=0;i<bfs.queue.size();i++){
+				if(bfs.queue.get(i)!=bfs1.queue.getInt(i))
+					System.out.println(bfs.queue.getInt(i)+" "+bfs1.queue.getInt(i));
+			}
+			ImmutableSubgraph sg = new ImmutableSubgraph(g, new IntArraySet(bfs.queue));
+			ImmutableSubgraph sg1 = new ImmutableSubgraph(g1, new IntArraySet(bfs1.queue));
+			for (int i=0;i<sg.numNodes();i++){
+				if(sg.fromSupergraphNode(i)!= sg1.fromSupergraphNode(i))
+					System.out.println("....."+i+" "+sg.toSupergraphNode(i)+" "+sg1.toSupergraphNode(i));
+			}
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+*/
 
 	}
 
