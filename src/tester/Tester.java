@@ -12,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 /**
  * 
@@ -97,14 +98,14 @@ public class Tester {
 	
 			
 			ArrayList<Test> testRun = new ArrayList<Test>();
-			testRun.add(new TrustRankTest(g,nodes,
-				seedTrustRank,"trustranktestMode1_62.txt",1));
-			HashSet<Integer> seedBad = Utility.readeLabel("spam",Utility.LABELPATH);
-			testRun.add(new TrustRankBadNodeTest(
-					g,nodes, seedTrustRank, seedBad,"trustrankBadNodesTestMode1_62.txt",1));
-			testRun.add(new AntiTrustRankTest(g,nodes,
-					seedAntiTrustRank,"antiTrustrankTestMode1_62.txt",1));
-			testRun.add(new AntiTrustRankGoodNodesTest(g, nodes, seedAntiTrustRank, seedTrustRank,"antiTrustraktGoodNodesTestMode1_62.txt",1));
+			//testRun.add(new TrustRankTest(g,nodes,
+			//	seedTrustRank,"trustranktestMode1_62.txt",1));
+			//HashSet<Integer> seedBad = Utility.readeLabel("spam",Utility.LABELPATH);
+			//testRun.add(new TrustRankBadNodeTest(
+			//		g,nodes, seedTrustRank, seedBad,"trustrankBadNodesTestMode1_62.txt",1));
+			//testRun.add(new AntiTrustRankTest(g,nodes,
+			//		seedAntiTrustRank,"antiTrustrankTestMode1_62.txt",1));
+			//testRun.add(new AntiTrustRankGoodNodesTest(g, nodes, seedAntiTrustRank, seedTrustRank,"antiTrustraktGoodNodesTestMode1_62.txt",1));
 			testRun.add(new StressTest(g,nodes,700,"stressTrustTestMode1_62.txt","stressAntiTrustTestMode1_62.txt",1));
 			
 
@@ -116,6 +117,7 @@ public class Tester {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 
 		/*
 		try {

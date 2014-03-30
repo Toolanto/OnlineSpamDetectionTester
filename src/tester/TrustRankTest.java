@@ -11,6 +11,7 @@ import it.unimi.dsi.webgraph.algo.ParallelBreadthFirstVisit;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 /**
  * Questa classe ha il compito di calcolare la tau di kendall tra i valori di
@@ -93,36 +94,32 @@ public class TrustRankTest implements Test {
 			trustSubGraph.compute();
 
 			double[] temp = new double[trustrank.length];
-			int[] idNode = new int[trustSubGraph.getRank().length]; // in caso
-																	// si vuole
-																	// il modo 1
-
+			
 			for (int f = 0; f < temp.length; f++)
 				temp[f] = 0.0;
 
 			for (int j = 0; j < trustSubGraph.getRank().length; j++) {
 				temp[subGraph.toSupergraphNode(j)] = trustSubGraph.getRank()[j];
-				if (mode >= 1)
-					idNode[j] = subGraph.toSupergraphNode(j);
-			}
-
+	
+				}
+           
 			if (mode == 0)
 				tauKendall[iteration] = KendallTau.compute(trustrank, temp);
 			else if (mode >= 1) {
-				double[] portionOftrustrank = new double[trustSubGraph
-						.getRank().length];
-				double[] portionOftrustrankSub = new double[trustSubGraph
-						.getRank().length];
-				for (int v = 0; v < trustSubGraph.getRank().length; v++) {
-					portionOftrustrank[v] = trustrank[idNode[v]];
-					portionOftrustrankSub[v] = temp[idNode[v]];
+				double[] portionOftrustrank = new double[t.length];
+				double[] portionOftrustrankSub = new double[t.length];
+				for (int v = 0; v < t.length; v++) {
+					portionOftrustrank[v] = trustrank[t[v]];
+					portionOftrustrankSub[v] = temp[t[v]];
 
 					// System.out.println("id: "+v+" trustrank: "+portionOftrustrank[v]+" trustranksub: "+portionOftrustrankSub[v]+" lunghezza: "+idNode.length+
 					// " kendall: "+KendallTau.compute(portionOftrustrank,
 					// portionOftrustrankSub));
 				}
-				tauKendall[iteration] = KendallTau.compute(portionOftrustrank,
-						portionOftrustrankSub);
+				if (portionOftrustrank.length > 0
+						&& portionOftrustrankSub.length > 0)
+					tauKendall[iteration] = KendallTau.compute(
+							portionOftrustrank, portionOftrustrankSub);
 			}
 
 			bf.write(iteration + 1 + " " + tauKendall[iteration] + "\n");

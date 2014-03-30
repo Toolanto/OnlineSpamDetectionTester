@@ -138,26 +138,24 @@ public class StressTest implements Test {
 			antiTrustSubGraph.compute();
 
 			double[] tempTrust = new double[graph.numNodes()];
-			int[] idNodeTrust = new int[trustSubGraph.getRank().length]; // in caso si vuole il modo 1
 			for (int f = 0; f < tempTrust.length; f++)
 				tempTrust[f] = 0.0;
 
 			double[] tempAntiTrust = new double[graph.numNodes()];
-			int[] idNodeAntitrust = new int[antiTrustSubGraph.getRank().length]; // in caso si vuole il modo 1
+
 			for (int f = 0; f < tempAntiTrust.length; f++)
 				tempAntiTrust[f] = 0.0;
 
 			for (int j = 0; j < trustSubGraph.getRank().length; j++) {
 				tempTrust[subGraph.toSupergraphNode(j)] = trustSubGraph
 						.getRank()[j];
-				if(mode>=1)
-					idNodeTrust[j]=subGraph.toSupergraphNode(j);
+
 			}
 
 			for (int j = 0; j < antiTrustSubGraph.getRank().length; j++) {
 				tempAntiTrust[subGraph.toSupergraphNode(j)] = antiTrustSubGraph
 						.getRank()[j];
-				idNodeAntitrust[j]=subGraph.toSupergraphNode(j);
+
 			}
 
 			if(mode==0){
@@ -165,21 +163,17 @@ public class StressTest implements Test {
 				antitrustKendall[iteration] = KendallTau.compute(antitrustrank,
 						tempAntiTrust);
 			}else if(mode>=1){
-				double[] portionOftrustrank = new double[trustSubGraph.getRank().length];
-				double[] portionOftrustrankSub = new double[trustSubGraph.getRank().length];
-				double[] portionOfantitrustrank = new double[antiTrustSubGraph.getRank().length];
-				double[] portionOfantitrustrankSub = new double[antiTrustSubGraph.getRank().length];
-				for(int v=0;v<trustSubGraph.getRank().length;v++){
-					portionOftrustrank[v] = trustrank[idNodeTrust[v]];
-				    portionOftrustrankSub[v] = tempTrust[idNodeTrust[v]];
-				    
+				double[] portionOftrustrank = new double[t.length];
+				double[] portionOftrustrankSub = new double[t.length];
+				double[] portionOfantitrustrank = new double[t.length];
+				double[] portionOfantitrustrankSub = new double[t.length];
+				for(int v=0;v<t.length;v++){
+					portionOftrustrank[v] = trustrank[t[v]];
+				    portionOftrustrankSub[v] = tempTrust[t[v]];
+				    portionOfantitrustrank[v] = antitrustrank[t[v]];
+				    portionOfantitrustrankSub[v] = tempAntiTrust[t[v]];
 				}
-				for(int v=0;v<antiTrustSubGraph.getRank().length;v++){
-					portionOfantitrustrank[v] = antitrustrank[idNodeAntitrust[v]];
-				    portionOfantitrustrankSub[v] = tempAntiTrust[idNodeAntitrust[v]];
-				    
-				}
-				
+
 				trustKendall[iteration] = KendallTau.compute(portionOftrustrank, portionOftrustrankSub);
 				antitrustKendall[iteration] = KendallTau.compute(portionOfantitrustrank, portionOfantitrustrankSub);
 			}

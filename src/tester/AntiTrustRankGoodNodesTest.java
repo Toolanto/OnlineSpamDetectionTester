@@ -1,17 +1,18 @@
 package tester;
 
-import it.unimi.dsi.fastutil.ints.Int2BooleanArrayMap;
+
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.law.stat.KendallTau;
 import it.unimi.dsi.webgraph.ImmutableGraph;
 import it.unimi.dsi.webgraph.ImmutableSubgraph;
-import it.unimi.dsi.webgraph.algo.ParallelBreadthFirstVisit;
+
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 public class AntiTrustRankGoodNodesTest extends AntiTrustRankTest implements
 		Test {
@@ -33,7 +34,7 @@ public class AntiTrustRankGoodNodesTest extends AntiTrustRankTest implements
 		System.out.println("Esecuzione della visita dei nodi...");
 		ImmutableGraph graphBFS = graph;
 
-		System.out.println("Nodi visitati: "+ bfs.size());
+		System.out.println("Nodi visitati: " + bfs.size());
 		System.out
 				.println("Calcolo tau di trustrank per ogni dimensione della visita...");
 
@@ -72,13 +73,6 @@ public class AntiTrustRankGoodNodesTest extends AntiTrustRankTest implements
 			antiTrustSubGraph.setSeeds(newSeed);
 			antiTrustSubGraph.compute();
 			double[] temp = new double[antiTrustRank.length];
-			int[] idNode = new int[antiTrustSubGraph.getRank().length]; // in
-																		// caso
-																		// si
-																		// vuole
-																		// il
-																		// modo
-																		// 1
 			int numeroNodiGood = 0;
 
 			for (double f : temp)
@@ -90,27 +84,34 @@ public class AntiTrustRankGoodNodesTest extends AntiTrustRankTest implements
 					temp[subGraph.toSupergraphNode(j)] = antiTrustSubGraph
 							.getRank()[j];
 					numeroNodiGood++;
-					if (mode >= 1) {
-						idNode[j] = subGraph.toSupergraphNode(j);
-						
-					}
-					
 				}
 			}
 			if (mode == 0)
 				tauKendallGoodNodes[i] = KendallTau
 						.compute(antiTrustRank, temp);
-			else if(mode>=1){
-				double[] portionOfantitrustrank = new double[antiTrustSubGraph.getRank().length];
-				double[] portionOfantitrustrankSub = new double[antiTrustSubGraph.getRank().length];
-				for(int v=0;v<antiTrustSubGraph.getRank().length;v++){
-					portionOfantitrustrank[v] = antiTrustRank[idNode[v]];
-				    portionOfantitrustrankSub[v] = temp[idNode[v]];
-				    
-				    //System.out.println("id: "+v+" trustrank: "+portionOftrustrank[v]+" trustranksub: "+portionOftrustrankSub[v]+" lunghezza: "+idNode.length+ " kendall: "+KendallTau.compute(portionOftrustrank, portionOftrustrankSub));
+			else if (mode >= 1) {
+				
+				int[] nodiGood = new int [numeroNodiGood];
+				int valueIncrement = 0;
+				for(int j:t){
+					if(seedGoodNodes.contains(j)){
+						nodiGood[valueIncrement] = j;
+						valueIncrement++;
+					}
 				}
-				tauKendallGoodNodes[i] = KendallTau.compute(portionOfantitrustrank, portionOfantitrustrankSub);
+				double[] portionOfantitrustrank = new double[nodiGood.length];
+				double[] portionOfantitrustrankSub = new double[nodiGood.length];
+				for (int v = 0; v < nodiGood.length; v++) {
+					portionOfantitrustrank[v] = antiTrustRank[nodiGood[v]];
+					portionOfantitrustrankSub[v] = temp[nodiGood[v]];
+
+				}
+				if (portionOfantitrustrank.length > 0
+						&& portionOfantitrustrankSub.length > 0)
+					tauKendallGoodNodes[i] = KendallTau.compute(
+							portionOfantitrustrank, portionOfantitrustrankSub);
 			}
+			
 			bf.write(numeroNodiGood + " " + tauKendallGoodNodes[i] + "\n");
 			bf.flush();
 			System.err.println("Iterazione: " + i);

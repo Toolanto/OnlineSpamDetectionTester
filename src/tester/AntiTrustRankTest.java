@@ -65,26 +65,20 @@ public class AntiTrustRankTest implements Test {
 			antitrustSubGraph.compute();
 			double[] temp = new double[antiTrustrank.length];
 
-			int[] idNode = new int[antitrustSubGraph.getRank().length]; // in caso
-																	// si vuole
-																	// il modo 1
-
 			for (int f = 0; f < temp.length; f++)
 				temp[f] = 0.0;
 
 			for (int j = 0; j < antitrustSubGraph.getRank().length; j++) {
 				temp[subGraph.toSupergraphNode(j)] = antitrustSubGraph.getRank()[j];
-				if(mode>=1)
-					idNode[j] = subGraph.toSupergraphNode(j);
 			}
 			if (mode == 0)
 				tauKendall[i] = KendallTau.compute(antiTrustrank, temp);
 			else if(mode>=1){
-				double[] portionOfantitrustrank = new double[antitrustSubGraph.getRank().length];
-				double[] portionOfantitrustrankSub = new double[antitrustSubGraph.getRank().length];
-				for(int v=0;v<antitrustSubGraph.getRank().length;v++){
-					portionOfantitrustrank[v] = antiTrustrank[idNode[v]];
-				    portionOfantitrustrankSub[v] = temp[idNode[v]];
+				double[] portionOfantitrustrank = new double[t.length];
+				double[] portionOfantitrustrankSub = new double[t.length];
+				for(int v=0;v<t.length;v++){
+					portionOfantitrustrank[v] = antiTrustrank[t[v]];
+				    portionOfantitrustrankSub[v] = temp[t[v]];
 				    
 				}
 				tauKendall[i] = KendallTau.compute(portionOfantitrustrank, portionOfantitrustrankSub);
