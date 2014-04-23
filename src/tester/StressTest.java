@@ -84,6 +84,8 @@ public class StressTest implements Test {
 		}
 		BFStrust.setSeeds(traslateSeedSetSub);
 		BFSantitrust.setSeeds(traslateSeedSetSub);
+		BFStrust.setAlpha(0.005);
+		BFSantitrust.setAlpha(0.005);
 		BFStrust.compute();
 		BFSantitrust.compute();
 		for (int f = 0; f < graph.numNodes(); f++) {
