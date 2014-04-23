@@ -75,8 +75,7 @@ public class AntiTrustRankGoodNodesTest extends AntiTrustRankTest implements
 			double[] temp = new double[antiTrustRank.length];
 			int numeroNodiGood = 0;
 
-			for (double f : temp)
-				f = 0.0;
+			
 			for (int j = 0; j < antiTrustSubGraph.getRank().length; j++) {
 				// prendo in consideranzion solo i nodi buoni gli altri li
 				// lascio a 0

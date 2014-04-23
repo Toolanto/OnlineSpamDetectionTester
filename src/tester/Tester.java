@@ -25,7 +25,8 @@ public class Tester {
 	public static final String TRUSTRANK_FILE = "trustrank.txt";
 	public static final String ANTITRUSTRANK_FILE = "antiTrustrank.txt";
 	public static final String GRAPHPATH = "../dataset2/bvuk-2007-05";
-	public static final String VISIT = "visit.txt";
+	public static final String VISIT = "visit62.txt";
+	public static final String VISIT2 = "visit112.txt";
 
 	/**
 	 * @param args
@@ -82,7 +83,7 @@ public class Tester {
 			File visitFile = new File(VISIT);
 			if(!visitFile.exists()){
 				ParallelBreadthFirstVisit bfs = new ParallelBreadthFirstVisit(g, 0,false, null);
-				bfs.visit(62);
+				bfs.visit(112);
 				nodes = bfs.queue;
 				FileWriter visitWriter = new FileWriter(
 						VISIT);
@@ -93,21 +94,22 @@ public class Tester {
 				bf.flush();
 			}else{
 			
-			  nodes = Utility.readVisit();
+			  nodes = Utility.readVisit(VISIT);
 			}
 	
 			
 			ArrayList<Test> testRun = new ArrayList<Test>();
 			//testRun.add(new TrustRankTest(g,nodes,
-			//	seedTrustRank,"trustranktestMode1_62.txt",1));
+			//	seedTrustRank,"trustranktestMode1_112.txt",1));
 			//HashSet<Integer> seedBad = Utility.readeLabel("spam",Utility.LABELPATH);
 			//testRun.add(new TrustRankBadNodeTest(
-			//		g,nodes, seedTrustRank, seedBad,"trustrankBadNodesTestMode1_62.txt",1));
+			//		g,nodes, seedTrustRank, seedBad,"trustrankBadNodesTestMode1_112.txt",1));
 			//testRun.add(new AntiTrustRankTest(g,nodes,
-			//		seedAntiTrustRank,"antiTrustrankTestMode1_62.txt",1));
-			//testRun.add(new AntiTrustRankGoodNodesTest(g, nodes, seedAntiTrustRank, seedTrustRank,"antiTrustraktGoodNodesTestMode1_62.txt",1));
-			testRun.add(new StressTest(g,nodes,700,"stressTrustTestMode1_62.txt","stressAntiTrustTestMode1_62.txt",1));
-			
+			//		seedAntiTrustRank,"antiTrustrankTestMode1_112.txt",1));
+			//testRun.add(new AntiTrustRankGoodNodesTest(g, nodes, seedAntiTrustRank, seedTrustRank,"antiTrustraktGoodNodesTestMode1_112.txt",1));
+			testRun.add(new StressTest(g,nodes,3776,"stressTrustTestMode1_62_set3776_alpha0005.txt","stressAntiTrustTestMode1_62_set3776_alpha0005.txt",1));
+			testRun.add(new StressTest(g,nodes,222,"stressTrustTestMode1_62_set222_alpha0005.txt","stressAntiTrustTestMode1_62_set222_alpha005.txt",1));
+
 
 			for (int i = 0; i < testRun.size(); i++)
 				testRun.get(i).run(); 

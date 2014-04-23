@@ -14,7 +14,9 @@ public class Utility {
 	
 	public static final String LABELPATH = "../dataset1/WEBSPAM-UK2007-SET1-labels.txt";
 	public static final String LABELPATH2 = "../dataset1/WEBSPAM-UK2007-SET2-labels.txt";
-	public static final String VISIT = "visit.txt";
+	public static final String VISIT = "visit62.txt";
+	public static final String VISIT2 = "visit112.txt";
+
 	
 	public static ArrayList<LabelNode> readLabel(String file){
 		ArrayList<LabelNode>  labelNodes= new ArrayList<LabelNode>();
@@ -72,9 +74,9 @@ public class Utility {
 		return seed;
 	}
 	
-	public static IntArrayList readVisit(){
+	public static IntArrayList readVisit(String path){
 		IntArrayList v = new IntArrayList();
-		File name = new File(VISIT);
+		File name = new File(path);
 		if (name.isFile()) {
 			try {
 				BufferedReader input = new BufferedReader(new FileReader(name));
