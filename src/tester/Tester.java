@@ -80,13 +80,13 @@ public class Tester {
 			ImmutableGraph g = ImmutableGraph.load(GRAPHPATH);
 			IntArrayList nodes;
 			
-			File visitFile = new File(VISIT);
+			File visitFile = new File(VISIT2);
 			if(!visitFile.exists()){
 				ParallelBreadthFirstVisit bfs = new ParallelBreadthFirstVisit(g, 0,false, null);
 				bfs.visit(112);
 				nodes = bfs.queue;
 				FileWriter visitWriter = new FileWriter(
-						VISIT);
+						VISIT2);
 				BufferedWriter bf = new BufferedWriter(visitWriter);
 				for (int i = 0; i < bfs.queue.size(); i++) {
 					bf.write(bfs.queue.getInt(i)+"\n");
@@ -94,7 +94,7 @@ public class Tester {
 				bf.flush();
 			}else{
 			
-			  nodes = Utility.readVisit(VISIT);
+			  nodes = Utility.readVisit(VISIT2);
 			}
 	
 			
@@ -107,8 +107,9 @@ public class Tester {
 			//testRun.add(new AntiTrustRankTest(g,nodes,
 			//		seedAntiTrustRank,"antiTrustrankTestMode1_112.txt",1));
 			//testRun.add(new AntiTrustRankGoodNodesTest(g, nodes, seedAntiTrustRank, seedTrustRank,"antiTrustraktGoodNodesTestMode1_112.txt",1));
-			testRun.add(new StressTest(g,nodes,3776,"stressTrustTestMode1_62_set3776_alpha0005.txt","stressAntiTrustTestMode1_62_set3776_alpha0005.txt",1));
-			testRun.add(new StressTest(g,nodes,222,"stressTrustTestMode1_62_set222_alpha0005.txt","stressAntiTrustTestMode1_62_set222_alpha005.txt",1));
+			//testRun.add(new StressTest(g,nodes,3776,"stressTrustTestMode1_62_set3776_alpha0005.txt","stressAntiTrustTestMode1_62_set3776_alpha0005.txt",1));
+			//testRun.add(new StressTest(g,nodes,222,"stressTrustTestMode1_62_set222_alpha0005.txt","stressAntiTrustTestMode1_62_set222_alpha005.txt",1));
+			testRun.add(new AvaregeTest(g,nodes,seedTrustRank,seedAntiTrustRank,"averageTest_trust_112.txt","averageTest_antitrust_112.txt"));
 
 
 			for (int i = 0; i < testRun.size(); i++)
