@@ -135,10 +135,10 @@ public class StressTest implements Test {
 			}
 
 			trustSubGraph.setSeeds(newSeed);
-			trustSubGraph.setAlpha(0.005);
+			//trustSubGraph.setAlpha(0.005);
 			trustSubGraph.compute();
 			antiTrustSubGraph.setSeeds(newSeed);
-			antiTrustSubGraph.setAlpha(0.005);
+			//antiTrustSubGraph.setAlpha(0.005);
 			antiTrustSubGraph.compute();
 
 			double[] tempTrust = new double[graph.numNodes()];

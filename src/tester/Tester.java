@@ -109,7 +109,9 @@ public class Tester {
 			//testRun.add(new AntiTrustRankGoodNodesTest(g, nodes, seedAntiTrustRank, seedTrustRank,"antiTrustraktGoodNodesTestMode1_112.txt",1));
 			//testRun.add(new StressTest(g,nodes,3776,"stressTrustTestMode1_62_set3776_alpha0005.txt","stressAntiTrustTestMode1_62_set3776_alpha0005.txt",1));
 			//testRun.add(new StressTest(g,nodes,222,"stressTrustTestMode1_62_set222_alpha0005.txt","stressAntiTrustTestMode1_62_set222_alpha005.txt",1));
-			testRun.add(new AvaregeTest(g,nodes,seedTrustRank,seedAntiTrustRank,"averageTest_trust_112.txt","averageTest_antitrust_112.txt"));
+			testRun.add(new StressTest(g,nodes,3776,"stressTrustTestMode0_62_set3776.txt","stressAntiTrustTestMode0_62_set3776.txt",0));
+			testRun.add(new StressTest(g,nodes,222,"stressTrustTestMode0_62_set222.txt","stressAntiTrustTestMode0_62_set222.txt",0));
+			//testRun.add(new AvaregeTest(g,nodes,seedTrustRank,seedAntiTrustRank,"averageTest_trust_112.txt","averageTest_antitrust_112.txt"));
 
 
 			for (int i = 0; i < testRun.size(); i++)
