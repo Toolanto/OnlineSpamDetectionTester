@@ -40,8 +40,9 @@ public class StressTest implements Test {
 	 * @param numberOfnode
 	 *            numero di nodi finali da considerare come seedset
 	 */
-	public StressTest(ImmutableGraph graph, IntArrayList bfs, int numberOfnodes,
-			String namePathTrust, String namePathAntiTrust, int mode) {
+	public StressTest(ImmutableGraph graph, IntArrayList bfs,
+			int numberOfnodes, String namePathTrust, String namePathAntiTrust,
+			int mode) {
 		this.graph = graph;
 		this.numberOfnodes = numberOfnodes;
 		this.namePahtTrust = namePathTrust;
@@ -55,12 +56,12 @@ public class StressTest implements Test {
 		// TODO Auto-generated method stub
 		System.out.println("Esecuzione della visita dei nodi...");
 
-		System.out.println("Nodi visitati: "+ bfs.size());
+		System.out.println("Nodi visitati: " + bfs.size());
 
 		double[] trustrank = new double[graph.numNodes()];
 		double[] antitrustrank = new double[graph.numNodes()];
 
-		// imposto i seedset con gli ultimi n-nodi
+		// imposto il seedset con gli ultimi n-nodi
 		HashSet<Integer> seedSet = new HashSet<Integer>();
 
 		int numberIt = bfs.size() - numberOfnodes;
@@ -84,8 +85,8 @@ public class StressTest implements Test {
 		}
 		BFStrust.setSeeds(traslateSeedSetSub);
 		BFSantitrust.setSeeds(traslateSeedSetSub);
-		BFStrust.setAlpha(0.005);
-		BFSantitrust.setAlpha(0.005);
+		// BFStrust.setAlpha(0.005);
+		// BFSantitrust.setAlpha(0.005);
 		BFStrust.compute();
 		BFSantitrust.compute();
 		for (int f = 0; f < graph.numNodes(); f++) {
@@ -104,8 +105,6 @@ public class StressTest implements Test {
 
 		double[] trustKendall = new double[BFStrust.getRank().length];
 		double[] antitrustKendall = new double[BFSantitrust.getRank().length];
-		
-		
 
 		FileWriter trustFile = new FileWriter(namePahtTrust);
 		BufferedWriter tf = new BufferedWriter(trustFile);
@@ -135,10 +134,10 @@ public class StressTest implements Test {
 			}
 
 			trustSubGraph.setSeeds(newSeed);
-			//trustSubGraph.setAlpha(0.005);
+			// trustSubGraph.setAlpha(0.005);
 			trustSubGraph.compute();
 			antiTrustSubGraph.setSeeds(newSeed);
-			//antiTrustSubGraph.setAlpha(0.005);
+			// antiTrustSubGraph.setAlpha(0.005);
 			antiTrustSubGraph.compute();
 
 			double[] tempTrust = new double[graph.numNodes()];
@@ -153,39 +152,40 @@ public class StressTest implements Test {
 			for (int j = 0; j < trustSubGraph.getRank().length; j++) {
 				tempTrust[subGraph.toSupergraphNode(j)] = trustSubGraph
 						.getRank()[j];
-
 			}
 
 			for (int j = 0; j < antiTrustSubGraph.getRank().length; j++) {
 				tempAntiTrust[subGraph.toSupergraphNode(j)] = antiTrustSubGraph
 						.getRank()[j];
-
 			}
 
-			if(mode==0){
-				trustKendall[iteration] = KendallTau.compute(trustrank, tempTrust);
+			if (mode == 0) {
+				trustKendall[iteration] = KendallTau.compute(trustrank,
+						tempTrust);
 				antitrustKendall[iteration] = KendallTau.compute(antitrustrank,
 						tempAntiTrust);
-			}else if(mode>=1){
+			} else if (mode >= 1) {
 				double[] portionOftrustrank = new double[t.length];
 				double[] portionOftrustrankSub = new double[t.length];
 				double[] portionOfantitrustrank = new double[t.length];
 				double[] portionOfantitrustrankSub = new double[t.length];
-				for(int v=0;v<t.length;v++){
+				for (int v = 0; v < t.length; v++) {
 					portionOftrustrank[v] = trustrank[t[v]];
-				    portionOftrustrankSub[v] = tempTrust[t[v]];
-				    portionOfantitrustrank[v] = antitrustrank[t[v]];
-				    portionOfantitrustrankSub[v] = tempAntiTrust[t[v]];
+					portionOftrustrankSub[v] = tempTrust[t[v]];
+					portionOfantitrustrank[v] = antitrustrank[t[v]];
+					portionOfantitrustrankSub[v] = tempAntiTrust[t[v]];
 				}
 
-				trustKendall[iteration] = KendallTau.compute(portionOftrustrank, portionOftrustrankSub);
-				antitrustKendall[iteration] = KendallTau.compute(portionOfantitrustrank, portionOfantitrustrankSub);
+				trustKendall[iteration] = KendallTau.compute(
+						portionOftrustrank, portionOftrustrankSub);
+				antitrustKendall[iteration] = KendallTau.compute(
+						portionOfantitrustrank, portionOfantitrustrankSub);
 			}
-			
-			tf.write(iteration+1 + " " + trustKendall[iteration] + "\n");
+
+			tf.write(iteration + 1 + " " + trustKendall[iteration] + "\n");
 			tf.flush();
 
-			atf.write(iteration+1 + " " + antitrustKendall[iteration] + "\n");
+			atf.write(iteration + 1 + " " + antitrustKendall[iteration] + "\n");
 			atf.flush();
 
 			System.err.println("Iterazione: " + iteration);
